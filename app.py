@@ -10,14 +10,14 @@ Kelas : S1-IF-10-K
 """
 
 
-# Local Database dengan XAMPP
+# Menggunakan Database Freedb.tech
 def db_connection():
     conn = None
     try:
         conn = pymysql.connect(
-            host="127.0.0.1",
-            database="pemrograman_fungsional",
-            user="root",
+            host="sql.freedb.tech",
+            database="freedb_Chiabiyyu_DB",
+            user="freedb_chi_abiyyu",
             # password="",
             port=3306,
             cursorclass=pymysql.cursors.DictCursor,
@@ -27,14 +27,14 @@ def db_connection():
     return conn
 
 
-@app.route("/books", methods=["GET", "POST", "PUT", "DELETE"])
-def manage_books():
+@app.route("/buku", methods=["GET", "POST", "PUT", "DELETE"])
+def manage_buku():
     conn = db_connection()
     cursor = conn.cursor()
     # GET untuk menampilkan data dari tabel
     if request.method == "GET":
-        cursor.execute("SELECT * FROM books")
-        books = [
+        cursor.execute("SELECT * FROM buku")
+        buku = [
             dict(
                 idbuku=row["idbuku"],
                 nama_buku=row["nama_buku"],
@@ -47,8 +47,8 @@ def manage_books():
             )
             for row in cursor.fetchall()
         ]
-        if books is not None:
-            return jsonify(books)
+        if buku is not None:
+            return jsonify(buku)
     # POST untuk menambahkan data dari tabel
     if request.method == "POST":
         add_nama_buku = request.form["nama_buku"]
@@ -60,7 +60,7 @@ def manage_books():
         add_stok = request.form["stok"]
 
         query_insert = """
-            INSERT INTO books (nama_buku, penulis, rating, halaman, tanggal_terbit, penerbit, stok)
+            INSERT INTO buku (nama_buku, penulis, rating, halaman, tanggal_terbit, penerbit, stok)
             VALUES (%s, %s, %s, %s, %s, %s, %s)
         """
 
@@ -90,7 +90,7 @@ def manage_books():
         update_stok = request.form["stok"]
 
         query_update = """
-            UPDATE books
+            UPDATE buku
             SET nama_buku=%s, penulis=%s, rating=%s, halaman=%s, tanggal_terbit=%s, penerbit=%s, stok=%s
             WHERE idbuku=%s
         """
@@ -114,7 +114,7 @@ def manage_books():
     if request.method == "DELETE":
         delete_idbuku = request.form["idbuku"]
 
-        query_delete = """DELETE FROM books WHERE idbuku=%s"""
+        query_delete = """DELETE FROM buku WHERE idbuku=%s"""
 
         cursor.execute(query_delete, (delete_idbuku,))
         conn.commit()
