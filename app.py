@@ -18,7 +18,7 @@ def db_connection():
             host="sql.freedb.tech",
             database="freedb_Chiabiyyu_DB",
             user="freedb_chi_abiyyu",
-            # password="",
+            password="6Am9uVaF6%r8X?*",
             port=3306,
             cursorclass=pymysql.cursors.DictCursor,
         )
