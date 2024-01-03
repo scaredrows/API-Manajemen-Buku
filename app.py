@@ -119,7 +119,7 @@ def manage_buku():
         cursor.execute(query_delete, (delete_idbuku,))
         conn.commit()
         return "Berhasil Menghapus Data Buku."
-
+        
 
 if __name__ == "__main__":
     app.run(debug=True, port=8000, use_reloader=True)
