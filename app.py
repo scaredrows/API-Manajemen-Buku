@@ -1,24 +1,21 @@
+# Nama  : Michael Jason
+# Kelas : IF 10 R
+# NIM   : 2211102361
+
 from flask import Flask, request, jsonify
 import pymysql
 
 app = Flask(__name__)
 
-"""
-Nama : Muhammad Faza Abiyyu
-NIM : 2211102010
-Kelas : S1-IF-10-K
-"""
 
-
-# Menggunakan Database Freedb.tech
 def db_connection():
     conn = None
     try:
         conn = pymysql.connect(
             host="sql.freedb.tech",
-            database="freedb_Chiabiyyu_DB",
-            user="freedb_chi_abiyyu",
-            password="6Am9uVaF6%r8X?*",
+            database="freedb_kapal_lawud",
+            user="freedb_ikan_terbang",
+            password="z5q!%NCG5wwnPzW",
             port=3306,
             cursorclass=pymysql.cursors.DictCursor,
         )
@@ -27,99 +24,89 @@ def db_connection():
     return conn
 
 
-@app.route("/buku", methods=["GET", "POST", "PUT", "DELETE"])
-def manage_buku():
+@app.route("/kapal", methods=["GET", "POST", "PUT", "DELETE"])
+def manage_kapal():
     conn = db_connection()
     cursor = conn.cursor()
-    # GET untuk menampilkan data dari tabel
+
     if request.method == "GET":
-        cursor.execute("SELECT * FROM buku")
-        buku = [
+        cursor.execute("SELECT * FROM data_kapal")
+        kapal = [
             dict(
-                idbuku=row["idbuku"],
-                nama_buku=row["nama_buku"],
-                penulis=row["penulis"],
-                rating=row["rating"],
-                halaman=row["halaman"],
-                tanggal_terbit=row["tanggal_terbit"],
-                penerbit=row["penerbit"],
-                stok=row["stok"],
+                id=row["id"],
+                nama_kapal=row["nama_kapal"],
+                tipe_kapal=row["tipe_kapal"],
+                tipe_mesin=row["tipe_mesin"],
+                max_speed=row["max_speed"],
+                harga=row["harga"],
             )
             for row in cursor.fetchall()
         ]
-        if buku is not None:
-            return jsonify(buku)
-    # POST untuk menambahkan data dari tabel
+        if kapal is not None:
+            return jsonify(kapal)
+
     if request.method == "POST":
-        add_nama_buku = request.form["nama_buku"]
-        add_penulis = request.form["penulis"]
-        add_rating = request.form["rating"]
-        add_halaman = request.form["halaman"]
-        add_tanggal_terbit = request.form["tanggal_terbit"]
-        add_penerbit = request.form["penerbit"]
-        add_stok = request.form["stok"]
+        add_nama_kapal = request.form["nama_kapal"]
+        add_tipe_kapal = request.form["tipe_kapal"]
+        add_tipe_mesin = request.form["tipe_mesin"]
+        add_max_speed = request.form["max_speed"]
+        add_harga = request.form["harga"]
 
         query_insert = """
-            INSERT INTO buku (nama_buku, penulis, rating, halaman, tanggal_terbit, penerbit, stok)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO data_kapal (nama_kapal, tipe_kapal, tipe_mesin, max_speed, harga)
+            VALUES (%s, %s, %s, %s, %s)
         """
 
         cursor.execute(
             query_insert,
             (
-                add_nama_buku,
-                add_penulis,
-                add_rating,
-                add_halaman,
-                add_tanggal_terbit,
-                add_penerbit,
-                add_stok,
+                add_nama_kapal,
+                add_tipe_kapal,
+                add_tipe_mesin,
+                add_max_speed,
+                add_harga,
             ),
         )
         conn.commit()
-        return "Berhasil Menambahkan Data Buku."
-    # PUT untuk memperbarui data dari tabel
+        return "Berhasil Menambahkan Data kapal."
+
     if request.method == "PUT":
-        update_idbuku = request.form["idbuku"]
-        update_nama_buku = request.form["nama_buku"]
-        update_penulis = request.form["penulis"]
-        update_rating = request.form["rating"]
-        update_halaman = request.form["halaman"]
-        update_tanggal_terbit = request.form["tanggal_terbit"]
-        update_penerbit = request.form["penerbit"]
-        update_stok = request.form["stok"]
+        update_id = request.form["id"]
+        update_nama_kapal = request.form["nama_kapal"]
+        update_tipe_kapal = request.form["tipe_kapal"]
+        update_tipe_mesin = request.form["tipe_mesin"]
+        update_max_speed = request.form["max_speed"]
+        update_harga = request.form["harga"]
 
         query_update = """
-            UPDATE buku
-            SET nama_buku=%s, penulis=%s, rating=%s, halaman=%s, tanggal_terbit=%s, penerbit=%s, stok=%s
-            WHERE idbuku=%s
+            UPDATE data_kapal
+            SET nama_kapal=%s, tipe_kapal=%s, tipe_mesin=%s, max_speed=%s, harga=%s
+            WHERE id=%s
         """
 
         cursor.execute(
             query_update,
             (
-                update_nama_buku,
-                update_penulis,
-                update_rating,
-                update_halaman,
-                update_tanggal_terbit,
-                update_penerbit,
-                update_stok,
-                update_idbuku,
+                update_nama_kapal,
+                update_tipe_kapal,
+                update_tipe_mesin,
+                update_max_speed,
+                update_harga,
+                update_id,
             ),
         )
         conn.commit()
-        return "Berhasil Memperbarui Data Buku."
-    # DELETE untuk menghapus data dari tabel
+        return "Berhasil Memperbarui Data kapal."
+
     if request.method == "DELETE":
-        delete_idbuku = request.form["idbuku"]
+        delete_id = request.form["id"]
 
-        query_delete = """DELETE FROM buku WHERE idbuku=%s"""
+        query_delete = """DELETE FROM data_kapal WHERE id=%s"""
 
-        cursor.execute(query_delete, (delete_idbuku,))
+        cursor.execute(query_delete, (delete_id,))
         conn.commit()
-        return "Berhasil Menghapus Data Buku."
-        
+        return "Berhasil Menghapus Data kapal."
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=8000, use_reloader=True)
